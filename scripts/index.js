@@ -13,8 +13,8 @@ document.getElementById('selectFolder').addEventListener('click', async () => {
   try {
     const dirHandle = await window.showDirectoryPicker();
     for await (const entry of dirHandle.values()) {
-      // if (entry.kind === 'file' && /\.(jpe?g|png)$/i.test(entry.name)) {
-      if (true) {
+      
+      if (entry.kind === 'file' && /\.(bmp|gif|jpe?g|png)$/i.test(entry.name)) {
         const file = await entry.getFile();
         imageFiles.push(file);
       }
