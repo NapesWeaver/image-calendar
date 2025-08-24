@@ -1,0 +1,61 @@
+article,
+aside,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section {
+    display: block;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body { 
+  font-family: sans-serif; 
+  text-align: center;
+}
+
+img {
+  display: block;
+  margin: auto;
+  max-width: 80%;
+}
+
+#controls,
+#selectFolder,
+#status {
+  margin-top: .3em;
+  margin-bottom: .3em;
+}
+
+table {
+  margin: auto; 
+  border-collapse: collapse; 
+}
+
+td { 
+  width: 40px; 
+  height: 40px; 
+  border: 1px solid #ccc; 
+  cursor: pointer; 
+}
+
+td:hover { 
+  background-color: #eef; 
+}
+
+td.today { 
+  background-color: #cce; 
+  font-weight: bold; 
+}
+
+#monthLabel { 
+  font-size: 1.2em;
+}
