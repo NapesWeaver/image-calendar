@@ -2,6 +2,7 @@
 
 let imageFiles = [];
 let currentMonth = new Date().getMonth();
+let currentDay = new Date().getDate();
 let currentYear = new Date().getFullYear();
 let lastCheckedDate = new Date().toDateString();
 
@@ -19,7 +20,6 @@ document.getElementById('selectFolder').addEventListener('click', async () => {
         imageFiles.push(file);
       }
     }
-    status.textContent = `Loaded ${imageFiles.length} images. Click a day to reveal its match.`;
     renderCalendar(currentYear, currentMonth);
   } catch (err) {
     status.textContent = 'Error or folder access denied.';
@@ -45,50 +45,6 @@ document.getElementById('nextMonth').onclick = () => {
   renderCalendar(currentYear, currentMonth);
 };
 
-function findClosestImage(month, day, callback) {
-  let closestFiles = [];
-  let closestDiff = Infinity;
-  let processed = 0;
-
-  imageFiles.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      let dateStr;
-      try {
-        const tags = EXIF.readFromBinaryFile(e.target.result);
-        dateStr = tags?.DateTimeOriginal;
-      } catch (err) {
-        const fallbackDate = new Date(file.lastModified);
-        dateStr = `${fallbackDate.getFullYear()}:${String(fallbackDate.getMonth()+1).padStart(2, '0')}:${String(fallbackDate.getDate()).padStart(2, '0')} ${String(fallbackDate.getHours()).padStart(2, '0')}:${String(fallbackDate.getMinutes()).padStart(2, '0')}:00`;
-      }
-
-      if (dateStr) {
-        const [datePart] = dateStr.split(' ');
-        const [year, m, d] = datePart.split(':').map(Number);
-        const diff = Math.abs((m - month) * 31 + (d - day));
-
-        if (diff < closestDiff) {
-          closestDiff = diff;
-          closestFiles = [{ file, dateStr }];
-        } else if (diff === closestDiff) {
-          closestFiles.push({ file, dateStr });
-        }
-      }
-
-      processed++;
-      if (processed === imageFiles.length) {
-        if (closestFiles.length > 0) {
-          const chosen = closestFiles[Math.floor(Math.random() * closestFiles.length)];
-          callback(chosen.file, chosen.dateStr);
-        } else {
-          callback(null, null);
-        }
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  });
-}
-
 function renderCalendar(year, month) {
   const calendar = document.getElementById('calendar');
   const monthLabel = document.getElementById('monthLabel');
@@ -102,13 +58,13 @@ function renderCalendar(year, month) {
   for (let i = 0; i < date.getDay(); i++) row.insertCell();
 
   for (let day = 1; day <= daysInMonth; day++) {
-  if (row.cells.length === 7) row = calendar.insertRow();
-  const cell = row.insertCell();
-  cell.textContent = day;
-  if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-    cell.classList.add('today');
-  }
-  cell.onclick = () => showImageForDate(month + 1, day);
+    if (row.cells.length === 7) row = calendar.insertRow();
+    const cell = row.insertCell();
+    cell.textContent = day;
+    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+      cell.classList.add('today');
+    }
+    cell.onclick = () => showImageForDate(month + 1, day);
   }
 
   // Auto-update image for the first day of the month
