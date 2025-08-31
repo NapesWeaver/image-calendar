@@ -64,10 +64,9 @@ function renderCalendar(year, month) {
       cell.classList.add('today');
     }
     cell.onclick = () => showImageForDate(month + 1, day);
-  }
-
+  }  
   if (imageFiles.length > 0) {
-    if (currentMonth === today.getMonth()) {
+    if (currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
       showImageForDate(month + 1, today.getDate());
     } else {
       // Auto-update image for the first day of the month
