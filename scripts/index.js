@@ -66,8 +66,14 @@ function renderCalendar(year, month) {
     cell.onclick = () => showImageForDate(month + 1, day);
   }
 
-  // Auto-update image for the first day of the month
-  if (imageFiles.length > 0) showImageForDate(month + 1, 1);
+  if (imageFiles.length > 0) {
+    if (currentMonth === today.getMonth()) {
+      showImageForDate(month + 1, today.getDate());
+    } else {
+      // Auto-update image for the first day of the month
+      showImageForDate(month + 1, 1);
+    }
+  }
 }
 
 function showImageForDate(month, day) {
@@ -82,25 +88,21 @@ function showImageForDate(month, day) {
     reader.onload = function (e) {
       let dateStr;
       let usedFallback = false;
-
       try {
         const tags = EXIF.readFromBinaryFile(e.target.result);
         dateStr = tags?.DateTimeOriginal;
       } catch (err) {
         console.warn("EXIF parse failed:", err);
       }
-
       if (!dateStr) {
         const fallbackDate = new Date(file.lastModified);
         dateStr = `${fallbackDate.getFullYear()}:${String(fallbackDate.getMonth()+1).padStart(2, '0')}:${String(fallbackDate.getDate()).padStart(2, '0')} ${String(fallbackDate.getHours()).padStart(2, '0')}:${String(fallbackDate.getMinutes()).padStart(2, '0')}:00`;
         usedFallback = true;
       }
-
       if (dateStr) {
         const [datePart] = dateStr.split(' ');
         const [year, m, d] = datePart.split(':').map(Number);
         const diff = Math.abs((m - month) * 31 + (d - day));
-
         if (diff < closestDiff) {
           closestDiff = diff;
           closestFiles = [{ file, dateStr }];
@@ -108,7 +110,6 @@ function showImageForDate(month, day) {
           closestFiles.push({ file, dateStr });
         }
       }
-
       processed++;
 
       if (processed === imageFiles.length) {
@@ -131,9 +132,9 @@ setInterval(() => {
   const now = new Date();
   const currentDate = now.toDateString();
   if (currentDate !== lastCheckedDate) {
-  lastCheckedDate = currentDate;
-  currentMonth = now.getMonth();
-  currentYear = now.getFullYear();
-  renderCalendar(currentYear, currentMonth);
+    lastCheckedDate = currentDate;
+    currentMonth = now.getMonth();
+    currentYear = now.getFullYear();
+    renderCalendar(currentYear, currentMonth);
   }
 }, 60000);// Check every 60 seconds
