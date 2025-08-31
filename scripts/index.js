@@ -2,7 +2,6 @@
 
 let imageFiles = [];
 let currentMonth = new Date().getMonth();
-let currentDay = new Date().getDate();
 let currentYear = new Date().getFullYear();
 let lastCheckedDate = new Date().toDateString();
 
