@@ -116,7 +116,7 @@ function showImageForDate(month, day) {
           const chosen = closestFiles[Math.floor(Math.random() * closestFiles.length)];
           const url = URL.createObjectURL(chosen.file);
           imgEl.src = url;
-          status.textContent = `Random image closest to ${month}/${day} ~ ${chosen.dateStr}`;
+          status.textContent = `Image closest to ${month}/${day} ~ ${chosen.dateStr}`;
         } else {
           status.textContent = 'No matching image found.';
           imgEl.src = '';
