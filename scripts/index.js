@@ -12,8 +12,7 @@ document.getElementById('selectFolder').addEventListener('click', async () => {
 
   try {
     const dirHandle = await window.showDirectoryPicker();
-    for await (const entry of dirHandle.values()) {
-      
+    for await (const entry of dirHandle.values()) {      
       if (entry.kind === 'file' && /\.(bmp|gif|jpe?g|png)$/i.test(entry.name)) {
         const file = await entry.getFile();
         imageFiles.push(file);
@@ -27,22 +26,41 @@ document.getElementById('selectFolder').addEventListener('click', async () => {
 });
 
 document.getElementById('prevMonth').onclick = () => {
+  displayPrevMonth();
+};
+
+document.getElementById('nextMonth').onclick = () => {
+  displayNextMonth();
+};
+
+document.addEventListener('keydown', function(event) {
+  switch (event.key) {
+    case 'ArrowLeft':
+      displayPrevMonth();
+      break;
+    case 'ArrowRight':
+      displayNextMonth();
+      break;
+  }
+});
+
+function displayPrevMonth() {
   currentMonth--;
   if (currentMonth < 0) {
     currentMonth = 11;
     currentYear--;
   }
   renderCalendar(currentYear, currentMonth);
-};
+}
 
-document.getElementById('nextMonth').onclick = () => {
+function displayNextMonth() {
   currentMonth++;
   if (currentMonth > 11) {
     currentMonth = 0;
     currentYear++;
   }
   renderCalendar(currentYear, currentMonth);
-};
+}
 
 function renderCalendar(year, month) {
   const calendar = document.getElementById('calendar');
@@ -81,7 +99,7 @@ function showImageForDate(month, day) {
   let closestFiles = [];
   let closestDiff = Infinity;
   let processed = 0;
-
+  
   imageFiles.forEach(file => {
     const reader = new FileReader();
     reader.onload = function (e) {
