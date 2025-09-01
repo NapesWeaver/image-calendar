@@ -4,6 +4,8 @@ let imageFiles = [];
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 let lastCheckedDate = new Date().toDateString();
+let selectedCell = null;
+
 
 document.getElementById('selectFolder').addEventListener('click', async () => {
   const status = document.getElementById('status');
@@ -81,7 +83,14 @@ function renderCalendar(year, month) {
     if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
       cell.classList.add('today');
     }
-    cell.onclick = () => showImageForDate(month + 1, day);
+    cell.onclick = () => {
+      if (selectedCell) {
+        selectedCell.classList.remove('selected');
+      }
+      cell.classList.add('selected');
+      selectedCell = cell;
+      showImageForDate(month + 1, day);
+    };
   }  
   if (imageFiles.length > 0) {
     if (currentMonth === today.getMonth() && currentYear === today.getFullYear()) {

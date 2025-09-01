@@ -56,6 +56,12 @@ td.today {
   font-weight: bold; 
 }
 
+.selected {
+  background-color: #cce;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
 #monthLabel { 
   font-size: 1.2em;
 }
